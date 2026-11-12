@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>TabungTarget</title>
+    <style>
+        :root {
+            --primary-bg: #F8FAFC;
+            --secondary-bg: #FFFFFF;
+            --accent-strong: #10B981;
+            --accent-secondary: #0EA5E9;
+            --proof-highlight: #F59E0B;
+            --info-highlight: #8B5CF6;
+            --text-primary: #0F172A;
+            --text-secondary: #475569;
+            --text-muted: #94A3B8;
+            --divider: #E2E8F0;
+            --danger: #EF4444;
+            --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+            --radius: 16px;
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        [data-theme="dark"] {
+            --primary-bg: #090D16;
+            --secondary-bg: #111827;
+            --accent-strong: #059669;
+            --accent-secondary: #0284C7;
+            --proof-highlight: #D97706;
+            --info-highlight: #7C3AED;
+            --text-primary: #F8FAFC;
+            --text-secondary: #94A3B8;
+            --text-muted: #64748B;
+            --divider: #1E293B;
+            --danger: #DC2626;
+            --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.3);
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+        }
+
+        body {
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding-bottom: 90px;
+        }
+
+        header {
+            background-color: var(--secondary-bg);
+            border-bottom: 1px solid var(--divider);
+            padding: 18px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .logo-box {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, var(--accent-strong), #059669);
+            color: white;
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 22px;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+        }
+
+        .header-title h1 {
+            font-size: 19px;
+            font-weight: 800;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
+        }
+
+        .header-title p {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .theme-toggle {
+            background: var(--primary-bg);
+            border: 1px solid var(--divider);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 18px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        main {
+            max-width: 640px;
+            margin: 0 auto;
+            padding: 24px 20px;
+        }
+
+        .tab-section {
+            display: none;
+        }
+
+        .tab-section.active {
+            display: block;
+            animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
+            margin-bottom: 4px;
+        }
+
+        .section-desc {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        .card {
+            background-color: var(--secondary-bg);
+            border: 1px solid var(--divider);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background-color: var(--accent-strong);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 14px 22px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            transition: var(--transition);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            opacity: 0.95;
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+            opacity: 0.85;
+        }
+
+        .btn-secondary {
+            background-color: var(--divider);
+            color: var(--text-primary);
+            box-shadow: none;
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+        }
+
+        .btn-whatsapp {
+            background-color: #25D366;
+            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.25);
+        }
+
+        .btn-sm {
+            padding: 8px 14px;
+            font-size: 12px;
+            width: auto;
+            border-radius: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid var(--divider);
+            border-radius: 12px;
+            font-size: 14px;
+            color: var(--text-primary);
+            background-color: var(--secondary-bg);
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent-strong);
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.12);
+        }
+
+        /* Target Cards & Progress */
+        .target-item {
+            background: var(--secondary-bg);
+            border: 1px solid var(--divider);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 16px;
+            position: relative;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+
+        .target-item:hover {
+            box-shadow: var(--shadow);
+            border-color: var(--accent-strong);
+        }
+
+        .target-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 14px;
+        }
+
+        .target-name {
+            font-weight: 800;
+            font-size: 17px;
+            color: var(--text-primary);
+            letter-spacing: -0.3px;
+        }
+
+        .target-category {
+            font-size: 11px;
+            background: rgba(14, 165, 233, 0.12);
+            color: var(--accent-secondary);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .progress-bar-container {
+            background: var(--divider);
+            border-radius: 12px;
+            height: 12px;
+            width: 100%;
+            overflow: hidden;
+            margin: 14px 0 10px 0;
+        }
+
+        .progress-bar-fill {
+            background: linear-gradient(90deg, var(--accent-strong), #34D399);
+            height: 100%;
+            border-radius: 12px;
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .target-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 14px;
+        }
+
+        .target-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Chart Visual CSS Styling */
+        .chart-container {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            height: 160px;
+            padding-top: 20px;
+            border-bottom: 2px solid var(--divider);
+            margin-bottom: 16px;
+            gap: 12px;
+            overflow-x: auto;
+        }
+
+        .chart-bar-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            min-width: 45px;
+            height: 100%;
+            justify-content: flex-end;
+        }
+
+        .chart-bar {
+            width: 100%;
+            max-width: 36px;
+            background: linear-gradient(180deg, var(--accent-secondary), var(--accent-strong));
+            border-radius: 8px 8px 0 0;
+            transition: height 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .chart-bar:hover {
+            opacity: 0.9;
+        }
+
+        .chart-label {
+            font-size: 10px;
+            color: var(--text-secondary);
+            margin-top: 8px;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+            font-weight: 600;
+        }
+
+        .chart-val-tip {
+            position: absolute;
+            top: -22px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 9px;
+            background: var(--text-primary);
+            color: var(--primary-bg);
+            padding: 2px 4px;
+            border-radius: 4px;
+            white-space: nowrap;
+            font-weight: 700;
+            display: none;
+        }
+
+        .chart-bar-group:hover .chart-val-tip {
+            display: block;
+        }
+
+        /* Bottom Nav */
+        nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--secondary-bg);
+            border-top: 1px solid var(--divider);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0 calc(10px + env(safe-area-inset-bottom, 0px));
+            z-index: 50;
+            box-shadow: 0 -10px 25px rgba(0,0,0,0.05);
+        }
+
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 0;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .nav-item.active {
+            color: var(--accent-strong);
+            font-weight: 800;
+            transform: translateY(-2px);
+        }
+
+        .nav-icon {
+            font-size: 22px;
+            margin-bottom: 3px;
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(9, 13, 22, 0.7);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            padding: 20px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+        }
+
+        .modal.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            background: var(--secondary-bg);
+            width: 100%;
+            max-width: 480px;
+            border-radius: var(--radius);
+            padding: 24px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow);
+            transform: translateY(16px);
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            border: 1px solid var(--divider);
+        }
+
+        .modal.open .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h3 {
+            font-size: 19px;
+            font-weight: 800;
+            letter-spacing: -0.3px;
+        }
+
+        .close-btn {
+            background: var(--primary-bg);
+            border: 1px solid var(--divider);
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-icon {
+            font-size: 56px;
+            margin-bottom: 14px;
+        }
+
+        .info-box {
+            background: rgba(14, 165, 233, 0.08);
+            border-left: 4px solid var(--accent-secondary);
+            padding: 16px;
+            border-radius: 0 var(--radius) var(--radius) 0;
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .summary-card {
+            background: var(--secondary-bg);
+            border: 1px solid var(--divider);
+            padding: 18px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .summary-card .label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .summary-card .value {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
+        }
+
+        /* History items */
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--divider);
+            font-size: 13px;
+        }
+        .history-item:last-child {
+            border-bottom: none;
+        }
+        .history-info .title {
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .history-info .meta {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+        .history-amount {
+            font-weight: 800;
+            color: var(--accent-strong);
+        }
+
+        /* Print Styling */
+        @media print {
+            header, nav, .btn, .target-actions, .theme-toggle, .no-print {
+                display: none !important;
+            }
+            body {
+                background: white !important;
+                color: black !important;
+                padding-bottom: 0 !important;
+            }
+            .card, .target-item, .summary-card {
+                border: 1px solid #ccc !important;
+                box-shadow: none !important;
+                background: white !important;
+                color: black !important;
+            }
+            .tab-section {
+                display: block !important;
+            }
+        }
+    </style>
+</head>
+<body data-theme="light">
+
+    <header>
+        <div class="header-brand">
+            <div class="logo-box">D</div>
+            <div class="header-title">
+                <h1>TabungTarget</h1>
+                <p>Pelacak Target Menabung Visual</p>
+            </div>
+        </div>
+        <button class="theme-toggle" id="theme-btn" onclick="toggleTheme()" title="Ganti Mode Gelap/Terang">🌙</button>
+    </header>
+
+    <main>
+        <!-- TAB 1: DASHBOARD UTAMA -->
+        <section id="tab-dashboard" class="tab-section active">
+            <div class="section-header">
+                <div>
+                    <h2 class="section-title">Celengan Impian</h2>
+                    <p class="section-desc">Pantau progress menabungmu hari ini.</p>
+                </div>
+                <button class="btn btn-sm" onclick="openTargetModal()">+ Target Baru</button>
+            </div>
+
+            <div class="summary-grid">
+                <div class="summary-card">
+                    <div class="label">Total Terkumpul</div>
+                    <div class="value" id="total-saved">Rp 0</div>
+                </div>
+                <div class="summary-card">
+                    <div class="label">Total Target</div>
+                    <div class="value" id="total-target">Rp 0</div>
+                </div>
+            </div>
+
+            <!-- DIAGRAM / GRAFIK VISUAL -->
+            <div class="card">
+                <h3 style="font-size: 15px; font-weight: 800; margin-bottom: 4px;">Diagram Progress Celengan</h3>
+                <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 14px;">Perbandingan saldo terkumpul tiap target.</p>
+                <div class="chart-container" id="chart-visual-container">
+                    <!-- Dynamic Bars -->
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); font-weight: 600;">
+                    <span>0% (Mulai)</span>
+                    <span>100% (Target Tercapai)</span>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                <button class="btn btn-secondary btn-sm" onclick="window.print()" style="flex:1;">🖨️ Cetak / PDF</button>
+                <button class="btn btn-whatsapp btn-sm" onclick="shareToWhatsApp()" style="flex:1;">💬 Share WhatsApp</button>
+            </div>
+
+            <div id="target-list-container">
+                <!-- Target items populated by JS -->
+            </div>
+        </section>
+
+        <!-- TAB 2: RIWAYAT SETORAN -->
+        <section id="tab-riwayat" class="tab-section">
+            <div class="section-header">
+                <div>
+                    <h2 class="section-title">Riwayat Setoran</h2>
+                    <p class="section-desc">Jejak kontribusi celengan yang sudah kamu simpan.</p>
+                </div>
+                <button class="btn btn-danger btn-sm" onclick="clearHistory()">Hapus Riwayat</button>
+            </div>
+
+            <div class="card" id="history-container" style="padding: 0; overflow: hidden;">
+                <!-- History items populated by JS -->
+            </div>
+        </section>
+
+        <!-- TAB 3: SIMULATOR & KALKULATOR -->
+        <section id="tab-simulator" class="tab-section">
+            <h2 class="section-title">Kalkulator Impian</h2>
+            <p class="section-desc" style="margin-bottom: 20px;">Pecah target besar jadi cicilan harian atau mingguan yang super ringan.</p>
+
+            <div class="card">
+                <div class="form-group">
+                    <label>Nama Impian</label>
+                    <input type="text" id="sim-name" class="form-control" placeholder="Contoh: Liburan ke Bali">
+                </div>
+                <div class="form-group">
+                    <label>Total Nominal (Rp)</label>
+                    <input type="number" id="sim-amount" class="form-control" placeholder="5000000">
+                </div>
+                <div class="form-group">
+                    <label>Tenggat Waktu (Deadline)</label>
+                    <input type="date" id="sim-deadline" class="form-control">
+                </div>
+                <button class="btn" onclick="calculateSimulation()">Hitung Rincian Ringan</button>
+            </div>
+
+            <div id="simulation-result" class="card" style="display: none;">
+                <h3 style="font-size: 16px; margin-bottom: 12px; font-weight: 800;">Hasil Rincian Target:</h3>
+                <div id="sim-output-content"></div>
+                <button class="btn" style="margin-top: 16px;" onclick="saveSimulationAsTarget()">Simpan ke Celengan</button>
+            </div>
+        </section>
+
+        <!-- TAB 4: PANDUAN -->
+        <section id="tab-panduan" class="tab-section">
+            <h2 class="section-title">Panduan Penggunaan</h2>
+            <p class="section-desc" style="margin-bottom: 20px;">Cara cepat pakai TabungTarget tanpa ribet.</p>
+
+            <div class="card">
+                <h3 style="font-size:15px; font-weight:800; margin-bottom:6px; color:var(--accent-strong);">1. Buat Target Impian</h3>
+                <p style="font-size:13px; color:var(--text-secondary); margin-bottom:16px;">Masukkan impianmu, misal "Dana Darurat" atau "Beli Laptop", lengkap dengan target nominal, kategori bebas yang bisa diketik sendiri, dan tanggal deadline.</p>
+                
+                <h3 style="font-size:15px; font-weight:800; margin-bottom:6px; color:var(--accent-strong);">2. Auto-Breakdown Otomatis</h3>
+                <p style="font-size:13px; color:var(--text-secondary); margin-bottom:16px;">Sistem otomatis memecah nominal besar menjadi cicilan harian/mingguan sekecil harga segelas kopi.</p>
+
+                <h3 style="font-size:15px; font-weight:800; margin-bottom:6px; color:var(--accent-strong);">3. Catat Setoran Real-Time</h3>
+                <p style="font-size:13px; color:var(--text-secondary);">Setiap kali menyisihkan uang, klik tombol "+" pada target untuk catat setoran. Progress bar gamifikasi dan diagram batang akan langsung naik secara visual!</p>
+            </div>
+        </section>
+
+        <!-- TAB 5: TENTANG -->
+        <section id="tab-tentang" class="tab-section">
+            <h2 class="section-title">Tentang TabungTarget</h2>
+            <p class="section-desc" style="margin-bottom: 20px;">Pelacak target menabung visual interaktif.</p>
+
+            <div class="card">
+                <div class="info-box">
+                    Tool ini 100% berbasis web, berjalan instan di browser HP atau laptop tanpa instalasi aplikasi berat dan tanpa rumus Excel yang rumit.
+                </div>
+                <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 14px;">
+                    <strong>Batas Jujur:</strong> TabungTarget adalah sistem pelacakan visual dan kalkulator target menabung otomatis. Tool ini membangun kedisiplinan dan sistem transparan, bukan memindahkan uang secara otomatis dari rekening bank Anda.
+                </p>
+                <div style="font-size: 12px; color: var(--text-muted); text-align: center; margin-top: 24px;">
+                    © TabungTarget — All rights reserved.
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- BOTTOM TAB BAR -->
+    <nav>
+        <button class="nav-item active" onclick="switchTab('dashboard', this)">
+            <span class="nav-icon">🎯</span>
+            Celengan
+        </button>
+        <button class="nav-item" onclick="switchTab('riwayat', this)">
+            <span class="nav-icon">📜</span>
+            Riwayat
+        </button>
+        <button class="nav-item" onclick="switchTab('simulator', this)">
+            <span class="nav-icon">🧮</span>
+            Kalkulator
+        </button>
+        <button class="nav-item" onclick="switchTab('panduan', this)">
+            <span class="nav-icon">📖</span>
+            Panduan
+        </button>
+        <button class="nav-item" onclick="switchTab('tentang', this)">
+            <span class="nav-icon">ℹ️</span>
+            Tentang
+        </button>
+    </nav>
+
+    <!-- MODAL TAMBAH TARGET -->
+    <div class="modal" id="target-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Tambah Target Baru</h3>
+                <button class="close-btn" onclick="closeTargetModal()">&times;</button>
+            </div>
+            <div class="form-group">
+                <label>Nama Impian</label>
+                <input type="text" id="target-name-input" class="form-control" placeholder="Contoh: DP Rumah Impian">
+            </div>
+            <div class="form-group">
+                <label>Target Nominal (Rp)</label>
+                <input type="number" id="target-amount-input" class="form-control" placeholder="15000000">
+            </div>
+            <div class="form-group">
+                <label>Kategori (Bisa diketik sendiri atau pilih)</label>
+                <input type="text" id="target-category-input" class="form-control" list="category-suggestions" placeholder="Contoh: Pribadi, Bisnis, Hiburan">
+                <datalist id="category-suggestions">
+                    <option value="Dana Darurat">
+                    <option value="Liburan">
+                    <option value="Gadget / Elektronik">
+                    <option value="Kendaraan / Rumah">
+                    <option value="Investasi">
+                    <option value="Lainnya">
+                </datalist>
+            </div>
+            <div class="form-group">
+                <label>Tenggat Waktu (Deadline)</label>
+                <input type="date" id="target-deadline-input" class="form-control">
+            </div>
+            <button class="btn" onclick="saveTargetData()">Simpan Target</button>
+        </div>
+    </div>
+
+    <!-- MODAL CATAT SETORAN -->
+    <div class="modal" id="deposit-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Tambah Setoran Celengan</h3>
+                <button class="close-btn" onclick="closeDepositModal()">&times;</button>
+            </div>
+            <input type="hidden" id="deposit-target-id">
+            <div class="form-group">
+                <label>Nominal Setoran (Rp)</label>
+                <input type="number" id="deposit-amount-input" class="form-control" placeholder="50000">
+            </div>
+            <button class="btn" onclick="processDeposit()">Setor ke Celengan</button>
+        </div>
+    </div>
+
+    <script>
+        // State Management
+        let targets = [];
+        let history = [];
+
+        try {
+            const savedTargets = localStorage.getItem('tabungtarget_data');
+            if (savedTargets) targets = JSON.parse(savedTargets);
+
+            const savedHistory = localStorage.getItem('tabungtarget_history');
+            if (savedHistory) history = JSON.parse(savedHistory);
+
+            const savedTheme = localStorage.getItem('tabungtarget_theme');
+            if (savedTheme) {
+                document.body.setAttribute('data-theme', savedTheme);
+                document.getElementById('theme-btn').innerText = savedTheme === 'dark' ? '☀️' : '🌙';
+            }
+        } catch(e) {}
+
+        // Default initial data if empty for first time user
+        if (targets.length === 0) {
+            targets = [
+                { id: '1', name: 'Liburan Akhir Tahun', amount: 3000000, current: 750000, category: 'Liburan', deadline: '2025-12-31' },
+                { id: '2', name: 'Dana Darurat 3 Bulan', amount: 9000000, current: 3000000, category: 'Dana Darurat', deadline: '2025-10-15' }
+            ];
+            saveStorage();
+        }
+
+        function saveStorage() {
+            try {
+                localStorage.setItem('tabungtarget_data', JSON.stringify(targets));
+                localStorage.setItem('tabungtarget_history', JSON.stringify(history));
+            } catch(e) {}
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.body.setAttribute('data-theme', newTheme);
+            document.getElementById('theme-btn').innerText = newTheme === 'dark' ? '☀️' : '🌙';
+            try {
+                localStorage.setItem('tabungtarget_theme', newTheme);
+            } catch(e) {}
+        }
+
+        // Tab Switching
+        function switchTab(tabId, el) {
+            document.querySelectorAll('.tab-section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById('tab-' + tabId).classList.add('active');
+            el.classList.add('active');
+            window.scrollTo(0, 0);
+
+            if (tabId === 'riwayat') renderHistory();
+            if (tabId === 'dashboard') renderDashboard();
+        }
+
+        // Format Currency IDR
+        function formatIDR(num) {
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(num);
+        }
+
+        // Render Chart Diagram
+        function renderChart() {
+            const chartContainer = document.getElementById('chart-visual-container');
+            chartContainer.innerHTML = '';
+
+            if (targets.length === 0) {
+                chartContainer.innerHTML = `<div style="text-align: center; width:100%; color: var(--text-muted); font-size:13px; padding: 20px;">Belum ada data diagram.</div>`;
+                return;
+            }
+
+            targets.forEach(t => {
+                const percent = t.amount > 0 ? Math.min(Math.round((t.current / t.amount) * 100), 100) : 0;
+                
+                const group = document.createElement('div');
+                group.className = 'chart-bar-group';
+                group.innerHTML = `
+                    <div class="chart-bar" style="height: ${Math.max(percent, 8)}%;">
+                        <div class="chart-val-tip">${percent}% (${formatIDR(t.current)})</div>
+                    </div>
+                    <div class="chart-label" title="${t.name}">${t.name}</div>
+                `;
+                chartContainer.appendChild(group);
+            });
+        }
+
+        // Render Dashboard
+        function renderDashboard() {
+            const container = document.getElementById('target-list-container');
+            container.innerHTML = '';
+
+            let totalSavedAll = 0;
+            let totalTargetAll = 0;
+
+            if (targets.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">🎯</div>
+                        <p>Belum ada target menabung.</p>
+                        <p style="font-size: 12px; margin-top: 4px;">Yuk buat target impianmu sekarang!</p>
+                    </div>
+                `;
+            } else {
+                targets.forEach(t => {
+                    totalSavedAll += t.current;
+                    totalTargetAll += t.amount;
+                    const percent = Math.min(Math.round((t.current / t.amount) * 100), 100);
+
+                    const deadlineDate = new Date(t.deadline);
+                    const today = new Date();
+                    const diffDays = Math.max(Math.ceil((deadlineDate - today) / (1000 * 60 * 60 * 24)), 1);
+                    const remainingAmount = Math.max(t.amount - t.current, 0);
+                    const dailyTarget = Math.ceil(remainingAmount / diffDays);
+
+                    const el = document.createElement('div');
+                    el.className = 'target-item';
+                    el.innerHTML = `
+                        <div class="target-header">
+                            <div>
+                                <span class="target-category">${t.category}</span>
+                                <div class="target-name" style="margin-top: 6px;">${t.name}</div>
+                            </div>
+                            <button class="btn btn-sm btn-danger" onclick="deleteTarget('${t.id}')">Hapus</button>
+                        </div>
+                        <div class="target-stats">
+                            <span>Terkumpul: <strong>${formatIDR(t.current)}</strong></span>
+                            <span>Target: <strong>${formatIDR(t.amount)}</strong></span>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-fill" style="width: ${percent}%;"></div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-secondary); margin-bottom: 16px;">
+                            <span>Progress: <strong>${percent}%</strong></span>
+                            <span>Saran harian: <strong>${formatIDR(dailyTarget)}/hari</strong></span>
+                        </div>
+                        <div class="target-actions">
+                            <button class="btn btn-sm" style="flex:1;" onclick="openDepositModal('${t.id}')">+ Catat Setoran</button>
+                        </div>
+                    `;
+                    container.appendChild(el);
+                });
+            }
+
+            document.getElementById('total-saved').innerText = formatIDR(totalSavedAll);
+            document.getElementById('total-target').innerText = formatIDR(totalTargetAll);
+            renderChart();
+        }
+
+        // Render History
+        function renderHistory() {
+            const container = document.getElementById('history-container');
+            container.innerHTML = '';
+
+            if (history.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">📜</div>
+                        <p>Belum ada riwayat setoran.</p>
+                        <p style="font-size: 12px; margin-top: 4px;">Setoran celengan akan tercatat otomatis di sini.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            history.slice().reverse().forEach(h => {
+                const item = document.createElement('div');
+                item.className = 'history-item';
+                item.innerHTML = `
+                    <div class="history-info">
+                        <div class="title">${h.targetName}</div>
+                        <div class="meta">${h.date}</div>
+                    </div>
+                    <div class="history-amount">+${formatIDR(h.amount)}</div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function clearHistory() {
+            if (confirm('Yakin ingin menghapus seluruh riwayat setoran?')) {
+                history = [];
+                saveStorage();
+                renderHistory();
+            }
+        }
+
+        // Share WhatsApp
+        function shareToWhatsApp() {
+            let totalSaved = targets.reduce((acc, t) => acc + t.current, 0);
+            let totalTarget = targets.reduce((acc, t) => acc + t.amount, 0);
+            let percent = totalTarget > 0 ? Math.min(Math.round((totalSaved / totalTarget) * 100), 100) : 0;
+
+            let text = `🎯 *Laporan Celengan TabungTarget*\n\n`;
+            text += `💰 Total Terkumpul: *${formatIDR(totalSaved)}*\n`;
+            text += `🏁 Total Target: *${formatIDR(totalTarget)}*\n`;
+            text += `📈 Progress Keseluruhan: *${percent}%*\n\n`;
+            text += `_Dibuat dengan TabungTarget App._`;
+
+            const encoded = encodeURIComponent(text);
+            window.open(`https://wa.me/?text=${encoded}`, '_blank');
+        }
+
+        // Modal Handler Target
+        function openTargetModal() {
+            document.getElementById('target-name-input').value = '';
+            document.getElementById('target-amount-input').value = '';
+            document.getElementById('target-category-input').value = '';
+            document.getElementById('target-deadline-input').value = '';
+            document.getElementById('target-modal').classList.add('open');
+        }
+
+        function closeTargetModal() {
+            document.getElementById('target-modal').classList.remove('open');
+        }
+
+        function saveTargetData() {
+            const name = document.getElementById('target-name-input').value.trim();
+            const amount = parseFloat(document.getElementById('target-amount-input').value);
+            const category = document.getElementById('target-category-input').value.trim() || 'Umum';
+            const deadline = document.getElementById('target-deadline-input').value;
+
+            if (!name || isNaN(amount) || amount <= 0 || !deadline) {
+                alert('Mohon isi semua field dengan benar!');
+                return;
+            }
+
+            const newTarget = {
+                id: Date.now().toString(),
+                name,
+                amount,
+                current: 0,
+                category,
+                deadline
+            };
+
+            targets.push(newTarget);
+            saveStorage();
+            closeTargetModal();
+            renderDashboard();
+        }
+
+        function deleteTarget(id) {
+            if (confirm('Yakin ingin menghapus target ini?')) {
+                targets = targets.filter(t => t.id !== id);
+                saveStorage();
+                renderDashboard();
+            }
+        }
+
+        // Modal Handler Deposit
+        let activeDepositId = null;
+        function openDepositModal(id) {
+            activeDepositId = id;
+            document.getElementById('deposit-amount-input').value = '';
+            document.getElementById('deposit-modal').classList.add('open');
+        }
+
+        function closeDepositModal() {
+            document.getElementById('deposit-modal').classList.remove('open');
+            activeDepositId = null;
+        }
+
+        function processDeposit() {
+            const val = parseFloat(document.getElementById('deposit-amount-input').value);
+            if (isNaN(val) || val <= 0) {
+                alert('Masukkan nominal setoran yang valid!');
+                return;
+            }
+
+            let targetName = '';
+            targets = targets.map(t => {
+                if (t.id === activeDepositId) {
+                    t.current += val;
+                    targetName = t.name;
+                }
+                return t;
+            });
+
+            // Push to history
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+            history.push({
+                targetName,
+                amount: val,
+                date: dateStr
+            });
+
+            saveStorage();
+            closeDepositModal();
+            renderDashboard();
+        }
+
+        // Kalkulator / Simulator
+        let lastSimulation = null;
+        function calculateSimulation() {
+            const name = document.getElementById('sim-name').value.trim();
+            const amount = parseFloat(document.getElementById('sim-amount').value);
+            const deadline = document.getElementById('sim-deadline').value;
+
+            if (!name || isNaN(amount) || amount <= 0 || !deadline) {
+                alert('Mohon lengkapi data simulasi dengan benar!');
+                return;
+            }
+
+            const deadlineDate = new Date(deadline);
+            const today = new Date();
+            const diffDays = Math.max(Math.ceil((deadlineDate - today) / (1000 * 60 * 60 * 24)), 1);
+            const diffWeeks = Math.max(Math.ceil(diffDays / 7), 1);
+            const diffMonths = Math.max(Math.ceil(diffDays / 30), 1);
+
+            const daily = Math.ceil(amount / diffDays);
+            const weekly = Math.ceil(amount / diffWeeks);
+            const monthly = Math.ceil(amount / diffMonths);
+
+            lastSimulation = { name, amount, deadline };
+
+            const output = document.getElementById('sim-output-content');
+            output.innerHTML = `
+                <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px;">Untuk mencapai <strong>${name}</strong> (${formatIDR(amount)}) dalam <strong>${diffDays} hari</strong> (${deadline}):</p>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; text-align: center; margin-bottom: 10px;">
+                    <div style="background: var(--primary-bg); padding: 12px; border-radius: 10px; border: 1px solid var(--divider);">
+                        <div style="font-size: 10px; color: var(--text-secondary); font-weight: 600;">HARIAN</div>
+                        <div style="font-size: 13px; font-weight: 800; color: var(--accent-strong); margin-top: 4px;">${formatIDR(daily)}</div>
+                    </div>
+                    <div style="background: var(--primary-bg); padding: 12px; border-radius: 10px; border: 1px solid var(--divider);">
+                        <div style="font-size: 10px; color: var(--text-secondary); font-weight: 600;">MINGGUAN</div>
+                        <div style="font-size: 13px; font-weight: 800; color: var(--accent-strong); margin-top: 4px;">${formatIDR(weekly)}</div>
+                    </div>
+                    <div style="background: var(--primary-bg); padding: 12px; border-radius: 10px; border: 1px solid var(--divider);">
+                        <div style="font-size: 10px; color: var(--text-secondary); font-weight: 600;">BULANAN</div>
+                        <div style="font-size: 13px; font-weight: 800; color: var(--accent-strong); margin-top: 4px;">${formatIDR(monthly)}</div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('simulation-result').style.display = 'block';
+        }
+
+        function saveSimulationAsTarget() {
+            if (!lastSimulation) return;
+            const newTarget = {
+                id: Date.now().toString(),
+                name: lastSimulation.name,
+                amount: lastSimulation.amount,
+                current: 0,
+                category: 'Kalkulator',
+                deadline: lastSimulation.deadline
+            };
+            targets.push(newTarget);
+            saveStorage();
+            alert('Berhasil disimpan ke Celengan!');
+            switchTab('dashboard', document.querySelector('nav button'));
+            renderDashboard();
+        }
+
+        // Inisialisasi awal saat load
+        renderDashboard();
+    </script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"9342f4b042b5485daeb68ea370085721","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>
